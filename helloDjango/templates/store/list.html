@@ -8,8 +8,13 @@
 </head>
 <body>
 <ul>
-    {% for stroe in stores %}
-           <li>{{ stroe.name }} -- {{ stroe.create_time }}</li>
+<P style="color: blue;">
+    <span>{{ first_store.name }}</span>
+    <span>{{ first_store.city }}</span>
+    <span>{{ first_store.address }}</span>
+</P>
+    {% for stroe in queryset %}
+           <li>{{ forloop.counter }}-{{ stroe.name }} -{{ stroe.city }}- {{ stroe.create_time }}</li>
     {% endfor %}
 
 </ul>
