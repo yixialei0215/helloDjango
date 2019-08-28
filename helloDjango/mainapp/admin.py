@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from mainapp.models import UserEntity, CateTypeEntity, FruitEntity, StoreEntity
+from mainapp.models import UserEntity, CateTypeEntity, FruitEntity, StoreEntity, FruitImage
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -16,11 +16,11 @@ class CateTypeAdmin(admin.ModelAdmin):
 
 
 class FruitAdmin(admin.ModelAdmin):
-    list_display = ('id', 'source', 'price', 'category')
+    list_display = ('id','name', 'source', 'price', 'category')
 
 
-# class FruitImageAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'name', 'url', 'width', 'height', 'fruit_id')
+class FruitImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'url', 'width', 'height', 'fruit_id')
 
 
 class StroeAdmin(admin.ModelAdmin):
@@ -33,5 +33,5 @@ class StroeAdmin(admin.ModelAdmin):
 admin.site.register(UserEntity, UserAdmin)
 admin.site.register(CateTypeEntity, CateTypeAdmin)
 admin.site.register(FruitEntity, FruitAdmin)
-# admin.site.register(FruitImage, FruitImageAdmin)
+admin.site.register(FruitImage, FruitImageAdmin)
 admin.site.register(StoreEntity, StroeAdmin)

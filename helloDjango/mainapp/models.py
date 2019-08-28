@@ -64,10 +64,13 @@ class FruitEntity(models.Model):
         verbose_name_plural = verbose_name
 
 
-'''
 class FruitImage(models.Model):
     fruit_id = models.ForeignKey(FruitEntity, on_delete=models.CASCADE)
-    url = models.ImageField(max_length=50, verbose_name='图片存放路径')
+    url = models.ImageField(max_length=50,
+                            verbose_name='图片存放路径',
+                            upload_to='fruit',
+                            null=True,
+                            blank=True)
     width = models.IntegerField(verbose_name='图片的宽度')
     height = models.IntegerField(verbose_name='图片的高度')
     name = models.CharField(max_length=20, verbose_name='名称')
@@ -79,7 +82,6 @@ class FruitImage(models.Model):
         db_table = 't_fruitimage'
         verbose_name = '水果图片'
         verbose_name_plural = verbose_name
-'''
 
 
 class StoreEntity(models.Model):
@@ -87,7 +89,9 @@ class StoreEntity(models.Model):
     # 但是，也可以以显示的方式声明主键（primary key）
     id = models.UUIDField(primary_key=True,
                           verbose_name='店号')
-    name = models.CharField(max_length=20, verbose_name='商店名', unique=True)
+    name = models.CharField(max_length=20,
+                            verbose_name='商店名',
+                            unique=True)
     # 表中对应的字段是type_
     store_type = models.IntegerField(choices=((0, '自营'), (1, '第三方')),
                                      verbose_name='商店类型',

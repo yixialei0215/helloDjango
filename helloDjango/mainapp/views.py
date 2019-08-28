@@ -1,7 +1,7 @@
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
-from mainapp.models import UserEntity, FruitEntity, StoreEntity
+from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage
 from django.db.models import Count, Sum, Min, Max, Avg
 
 
@@ -104,11 +104,9 @@ def find_fruit(request):
     price1 = request.GET.get('price1', 0)
     price2 = request.GET.get('price2', 1000)
     # 根据价格区间查询满足条件所有水果信息
-    fruits = FruitEntity.objects.filter(price__gte=price1,
-                                        price__lte=price2) \
-        .exclude(price=250) \
-        .filter(name__contains='果') \
-        .all()
+    fruits = FruitImage.objects \
+        .values('url', 'fruit_id__name', 'fruit_id__price', 'fruit_id__source', 'width', 'height') \
+        .filter(fruit_id__price__gte=price1, fruit_id__price__lte=price2).all()
     # 将查询到的数据渲染到html模板中
     return render(request, 'fruit/list.html', locals())
 
@@ -150,4 +148,12 @@ def count_fruit(request):
                                            min=Min('price'),
                                            avg=Avg('price'),
                                            sum=Sum('price'))
+
     return JsonResponse(result)
+
+
+def delete_fruit(request):
+    result = FruitEntity.objects.filter(name='哈密瓜').delete()
+    print(result)
+
+    return render(request, 'fruit/delete.html', locals())
