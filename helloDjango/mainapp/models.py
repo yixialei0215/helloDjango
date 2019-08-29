@@ -93,8 +93,26 @@ class FruitEntity(models.Model):
     price = models.FloatField(verbose_name='价格', )
     source = models.CharField(max_length=30, verbose_name='原产地')
 
+    # 建立多对一的关联关系
     category = models.ForeignKey(CateTypeEntity,
+                                 related_name='fruits',
+                                 to_field='id',
                                  on_delete=models.CASCADE)
+
+    # 默认情况下，反向引用的名称是当前类的名称（小写）_set
+    # 可以通过related_name 来指定
+    # db_table='t_collect' 使用第三张表建立fruit和user多对多关系
+    users = models.ManyToManyField(UserEntity,
+                                   db_table='t_collect',
+                                   related_name='fruits',
+                                   verbose_name='收藏用户列表',
+                                   blank=True,
+                                   null=True)
+
+    tags = models.ManyToManyField('TagEntity',
+                                  related_name='fruits',
+                                  db_table='t_fruit_tags',
+                                  verbose_name='所有标签')
 
     def __str__(self):
         return self.name
@@ -221,3 +239,19 @@ class StoreEntity(models.Model):
         unique_together = (('name', 'city'),)
         verbose_name = '商店信息'
         verbose_name_plural = verbose_name
+
+
+class TagEntity(models.Model):
+    class Meta:
+        db_table = 't_tag'
+        verbose_name = verbose_name_plural = '标签信息'
+        ordering = ['-order_num']
+
+    name = models.CharField(max_length=20,
+                            verbose_name='标签名',
+                            unique=True)
+
+    order_num = models.IntegerField(verbose_name='序号', default=1)
+
+    def __str__(self):
+        return self.name

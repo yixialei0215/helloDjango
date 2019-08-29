@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from mainapp.models import UserEntity, CateTypeEntity, FruitEntity, StoreEntity, FruitImage, RealProfile, CartEntity, \
-    FruitCartEntity
+    FruitCartEntity, TagEntity
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -39,14 +39,21 @@ class CartEntityAdmin(admin.ModelAdmin):
 
 class FruitCartEntityAdmin(admin.ModelAdmin):
     # 显示字段可以引用关联
-    list_display = ('cart', 'fruit', 'get_price1', 'cnt', 'get_price')
+    list_display = ('cart', 'fruit',
+                    'get_price1', 'cnt', 'get_price')
 
     def get_price1(self, obj):
         return obj.price1
-    def get_price(self,obj):
+
+    def get_price(self, obj):
         return obj.price
+
     get_price1.short_description = '小计'
     get_price.short_description = '总价'
+
+
+class TagEntityAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order_num')
 
 
 # Register your models here.
@@ -59,3 +66,4 @@ admin.site.register(StoreEntity, StroeAdmin)
 admin.site.register(RealProfile, RealProfileAdmin)
 admin.site.register(CartEntity, CartEntityAdmin)
 admin.site.register(FruitCartEntity, FruitCartEntityAdmin)
+admin.site.register(TagEntity, TagEntityAdmin)
