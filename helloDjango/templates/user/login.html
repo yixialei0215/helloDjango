@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户登录</title>
+    <style>
+        .error{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<form method="post" action="/user/login">{% csrf_token %}
+    <input type="text" name="name"><br>
+    <input type="password" name="pwd"><br>
+    <button>登录</button>
+    <button><a href="zhuce.html">注册</a></button>
+    <p class="error">{{ ret }}</p>
+</form>
+</body>
+</html>

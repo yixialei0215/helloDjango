@@ -1,10 +1,15 @@
+import os
 import random
+import time
+from datetime import datetime
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template import loader
+from django.views.decorators.csrf import csrf_protect
 
-from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage
+from helloDjango import settings
+from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage, UserPasswordEntity
 from django.db.models import Count, Sum, Min, Max, Avg, F, Q
 
 
@@ -102,7 +107,6 @@ def user_list3(request):
 
     error_index = random.randint(0, datas.count() - 1)
     error_name = datas[error_index].name
-
     vip = {
         'name': 'disen',
         'money': 20000
@@ -115,20 +119,57 @@ def user_list3(request):
     #     'msg': msg,
     #     'datas': datas
     # })
+    info = '<h3>用户的个人简要</h3><p>我的家乡在甘肃</p><p>我喜欢读书</p>'
+    years = 2015
+    now = datetime.now()
+
+    file_dir = os.path.join(settings.BASE_DIR, 'mainapp/')
+    files = {file_name: os.stat(file_dir + file_name)
+             for file_name in os.listdir(file_dir)
+             if os.path.isfile(file_dir + file_name)}
+
+    # file_path = os.path.join(settings.BASE_DIR, 'mainapp/models.py')
+    # file_stat = os.stat(file_path)
+
     html = loader.render_to_string('user/list.html', locals(), request)
 
     return HttpResponse(html, status=200)  # 增加响应头??
 
 
 def find_fruit(request):
-    # 从查询参数中获取价格区间[price1,price2]
     price1 = request.GET.get('price1', 0)
     price2 = request.GET.get('price2', 1000)
-    # 根据价格区间查询满足条件所有水果信息
     fruits = FruitImage.objects \
         .values('url', 'fruit_id__name', 'fruit_id__price', 'fruit_id__source', 'width', 'height') \
         .filter(fruit_id__price__gte=price1, fruit_id__price__lte=price2).all()
-    # 将查询到的数据渲染到html模板中
+    if request.method == 'GET':
+        # 将查询到的数据渲染到html模板中
+        # 从查询参数中获取价格区间[price1,price2]
+
+        # 根据价格区间查询满足条件所有水果信息
+
+        login_is = request.COOKIES.get('is_login')
+        if login_is:
+            name1 = request.COOKIES.get('name')
+        return render(request, 'fruit/list.html', locals())
+
+    if request.method == "POST":
+        ret = ''
+        name = request.POST.get('name')
+        pwd = request.POST.get('pwd')
+        user_ = UserPasswordEntity.objects.filter(users__name=name).first()
+        time1 = time.time() + 180
+        response = ''
+        if user_:
+            if user_.password == pwd:
+                obj = redirect('/user/find')
+                obj.set_cookie('is_login', True, max_age=20)
+                obj.set_cookie('name', user_.name, max_age=20)
+                return obj
+            else:
+                ret = '用户名或密码错误'
+        else:
+            ret = '用户名不存在，请先注册'
     return render(request, 'fruit/list.html', locals())
 
 
@@ -192,3 +233,8 @@ def delete_fruit(request):
     print(result)
 
     return render(request, 'fruit/delete.html', locals())
+
+
+# 用户登录
+def user_login(request):
+    pass

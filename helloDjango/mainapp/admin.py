@@ -1,15 +1,24 @@
 from django.contrib import admin
 
 from mainapp.models import UserEntity, CateTypeEntity, FruitEntity, StoreEntity, FruitImage, RealProfile, CartEntity, \
-    FruitCartEntity, TagEntity
+    FruitCartEntity, TagEntity, UserPasswordEntity
 
 
 class UserAdmin(admin.ModelAdmin):
     # 表示列表中显示的字段
     list_display = ('id', 'name', 'phone')
-    list_per_page = 1  # 每一页显示记录数
+    # list_per_page = 1  # 每一页显示记录数
     list_filter = ('id', 'phone')  # 过滤器（一般配置类）
     search_fields = ('id', 'phone')  # 搜索字段
+
+
+class UserPasswordEntityAdmin(admin.ModelAdmin):
+    list_display = ('id', 'get_name')
+
+    def get_name(self, obj):
+        return obj.name
+
+    get_name.short_description = '姓名'
 
 
 class CateTypeAdmin(admin.ModelAdmin):
@@ -67,3 +76,4 @@ admin.site.register(RealProfile, RealProfileAdmin)
 admin.site.register(CartEntity, CartEntityAdmin)
 admin.site.register(FruitCartEntity, FruitCartEntityAdmin)
 admin.site.register(TagEntity, TagEntityAdmin)
+admin.site.register(UserPasswordEntity, UserPasswordEntityAdmin)

@@ -28,6 +28,25 @@ class UserEntity(models.Model):
         verbose_name_plural = verbose_name
 
 
+class UserPasswordEntity(models.Model):
+    class Meta:
+        db_table = 't_password'
+        verbose_name = verbose_name_plural = '用户密码表'
+
+    users = models.ForeignKey(UserEntity,
+                              on_delete=models.CASCADE,
+                              verbose_name='账号')
+    password = models.CharField(max_length=10,
+                                verbose_name='密码')
+
+    @property
+    def name(self):
+        return self.users.name
+
+    def __str__(self):
+        return self.users.name
+
+
 class RealProfile(models.Model):
     # 声明一对一的关联关系
     user = models.OneToOneField(UserEntity, on_delete=models.CASCADE, verbose_name='账号')
@@ -40,9 +59,13 @@ class RealProfile(models.Model):
                                              (1, '护照'),
                                              (2, '驾驶证')))
     image1 = models.ImageField(verbose_name='正面照',
-                               upload_to='user/real')
+                               upload_to='user/real',
+                               null=True,
+                               blank=True)
     image2 = models.ImageField(verbose_name='反面照',
-                               upload_to='user/real')
+                               upload_to='user/real',
+                               null=True,
+                               blank=True)
 
     def __str__(self):
         return self.real_name
