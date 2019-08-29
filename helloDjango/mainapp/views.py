@@ -2,7 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage
-from django.db.models import Count, Sum, Min, Max, Avg
+from django.db.models import Count, Sum, Min, Max, Avg, F, Q
 
 
 # Create your views here.
@@ -148,8 +148,22 @@ def count_fruit(request):
                                            min=Min('price'),
                                            avg=Avg('price'),
                                            sum=Sum('price'))
+    # 中秋节：全场水果打8.8折扣
+    # FruitEntity.objects.update(price=F('price') * 1.88)
+    fruits = FruitEntity.objects.values()
 
-    return JsonResponse(result)
+    # 查询价格低于1的或高于200的，或原产地是西安且名称中包含“果”
+    fruit2 = FruitEntity.objects.filter(
+        Q(price__lte=1) | Q(price__gte=200) | Q(Q(source='西安') & Q(name__contains='果'))).values()
+
+    # raw()
+    fruit3 = FruitEntity.objects.raw('select * from t_fruit')
+    for fruit in fruit3:
+        print(fruit.name)
+    return JsonResponse({
+        'content': result,
+        'fruits': [fruit for fruit in fruit2]
+    })
 
 
 def delete_fruit(request):

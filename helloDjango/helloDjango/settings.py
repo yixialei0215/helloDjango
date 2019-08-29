@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'mainapp',  # 注册app
+    'orderapp'
 ]
 
 MIDDLEWARE = [
