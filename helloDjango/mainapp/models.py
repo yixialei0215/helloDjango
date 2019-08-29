@@ -87,6 +87,7 @@ class CateTypeEntity(models.Model):
         verbose_name_plural = verbose_name
 
 
+# 水果模型类
 class FruitEntity(models.Model):
     name = models.CharField(max_length=20,
                             verbose_name='水果名')
@@ -112,7 +113,9 @@ class FruitEntity(models.Model):
     tags = models.ManyToManyField('TagEntity',
                                   related_name='fruits',
                                   db_table='t_fruit_tags',
-                                  verbose_name='所有标签')
+                                  verbose_name='所有标签',
+                                  blank=True,
+                                  null=True)
 
     def __str__(self):
         return self.name

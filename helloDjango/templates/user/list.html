@@ -5,8 +5,26 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>主页</title>
+    {% include 'base_css.html' %}
 </head>
 <body>
+
+<h3 style="color: green;">
+    第三个用户名：{{ datas.1.name }}
+</h3>
+<h3 style="color: red">
+    今天请客：{{ error_name }}
+</h3>
+<p style="color: white;background-color:blue;">
+    <span>VIP:</span>
+    <span>{{ vip.name.upper }}-{{ vip.money }}</span>
+</p>
+<ul>
+    {% for key,value in vip.items %}
+        <li>{{ key }}={{ value }}</li>
+    {% endfor %}
+
+</ul>
 <h3>{{ msg }}</h3>
 <ul>
     {% for user in datas %}
@@ -14,5 +32,7 @@
     {% endfor %}
 
 </ul>
+
+{% include 'base_js.html' %}
 </body>
 </html>

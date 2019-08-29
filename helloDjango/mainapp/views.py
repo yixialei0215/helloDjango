@@ -1,5 +1,8 @@
+import random
+
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+from django.template import loader
 
 from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage
 from django.db.models import Count, Sum, Min, Max, Avg, F, Q
@@ -95,8 +98,26 @@ def delete_user(request):
 
 def user_list3(request):
     datas = UserEntity.objects.all()
-    msg = '会员'
-    return render(request, 'user/list.html', locals())
+    msg = '最优秀的学员'
+
+    error_index = random.randint(0, datas.count() - 1)
+    error_name = datas[error_index].name
+
+    vip = {
+        'name': 'disen',
+        'money': 20000
+    }
+    # # 加载模板
+    # template = loader.get_template('user/list.html')
+    #
+    # # 渲染模板
+    # html = template.render(context={
+    #     'msg': msg,
+    #     'datas': datas
+    # })
+    html = loader.render_to_string('user/list.html', locals(), request)
+
+    return HttpResponse(html, status=200)  # 增加响应头??
 
 
 def find_fruit(request):
