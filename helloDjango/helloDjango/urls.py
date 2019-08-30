@@ -30,21 +30,19 @@ from django.urls import path, include
 # 请求体：body(字节类型)
 def index(request: HttpRequest):
     # 加载数据模型
-    users = [
-        {'id': 1, 'name': 'disen'},
-        {'id': 2, 'name': 'jack'},
-        {'id': 3, 'name': '马润超'}
-    ]
 
     # return HttpResponse('<h1>h1,Django</h1>'.encode('utf-8'))
     # 将数据渲染到模板中，并将渲染之后html响应给客户端
-    return render(request, 'index.html', {'users': users, 'msg': '所有用户'})
+    return render(request, 'index.html', locals())
+
+
 
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('', index),
-                  # 配置子路由
-                  # include() 导入app模块下urls.py文件下的所有子路由
-                  path('user/', include('mainapp.urls'))
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+      path('admin/', admin.site.urls),
+      # 配置子路由
+      # include() 导入app模块下urls.py文件下的所有子路由
+      path('user/', include('mainapp.urls')),
+      path('order/', include('orderapp.urls', namespace='order')),
+      path('', index),
+  ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

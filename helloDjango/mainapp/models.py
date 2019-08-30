@@ -1,10 +1,28 @@
+import re
 import uuid
 
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
 # Create your models here.
 # 客户的用户表
+
+class UserManager(models.Manager):
+    def update(self, **kwargs):
+        password = kwargs.get('password', None)
+        if password and len(password) < 50:
+            kwargs['password'] = make_password(password)
+        super().update(**kwargs)
+
+
+class UserValidator:
+    @classmethod
+    def valid_phone(cls, value):
+        if not re.match(r'1[1-57-9]\d{9}', value):
+            raise ValidationError('手机格式不正确')
+        return True
 
 
 class UserEntity(models.Model):
@@ -13,9 +31,23 @@ class UserEntity(models.Model):
     age = models.IntegerField(default=0, verbose_name='年龄')
     phone = models.CharField(max_length=11,
                              verbose_name='手机号',
+                             validators=[UserValidator.valid_phone],
                              blank=True,  # 站点的表单字段值可以为空
                              null=True  # 数据表的字段可以是null
                              )
+    password = models.CharField(max_length=10,
+                                verbose_name='密码',
+                                null=True,
+                                blank=True)
+
+    objects = UserManager()
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if len(self.password) < 50:
+            # 明文转密文
+            self.password = make_password(self.password)
+        super().save()
 
     def __str__(self):
         return self.name
@@ -26,25 +58,6 @@ class UserEntity(models.Model):
         verbose_name = '客户管理'
         # 设置复数的表示方式
         verbose_name_plural = verbose_name
-
-
-class UserPasswordEntity(models.Model):
-    class Meta:
-        db_table = 't_password'
-        verbose_name = verbose_name_plural = '用户密码表'
-
-    users = models.ForeignKey(UserEntity,
-                              on_delete=models.CASCADE,
-                              verbose_name='账号')
-    password = models.CharField(max_length=10,
-                                verbose_name='密码')
-
-    @property
-    def name(self):
-        return self.users.name
-
-    def __str__(self):
-        return self.users.name
 
 
 class RealProfile(models.Model):

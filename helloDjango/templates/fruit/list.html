@@ -25,11 +25,12 @@
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">登录</h4>
             </div>
-            <form method="post" action="/user/find">{% csrf_token %}
+            <form method="post" action="/user/find">
+                {#                {% csrf_token %}#}
                 <div class="modal-body">
 
-                    用户名<input type="text" name="name"><br>
-                    密&nbsp;&nbsp;&nbsp;码<input type="password" name="pwd"><br>
+                    用户名:&nbsp;&nbsp;<input type="text" name="name" placeholder="用户名"><br><br>
+                    密&nbsp;&nbsp;&nbsp;码:&nbsp;&nbsp;&nbsp;<input type="password" name="pwd" placeholder="密码"><br>
 
                 </div>
                 <div class="modal-footer">
@@ -44,8 +45,15 @@
 
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
-
-        <p class="text-right" style="font-size: 18px">{% if name1 %}欢迎{{ name1 }}{% else %}
+        <div style="display: inline-block; font-size: 18px" >
+            <p style="display: inline-block">分类</p>
+            <a>排毒养颜</a>
+            <a>清热解毒</a>
+            <a>瓜果类</a>
+            <a>干货</a>
+        </div>
+        <p class="text-right" style="font-size: 18px;">{% if name1 %}欢迎{{ name1 }}
+            <a class="btn btn-default" href="/user/delete">注销</a>{% else %}
             <button class="btn btn-default" data-toggle="modal" data-target="#myModal">登录</button>
             <button class="btn btn-default">注册</button>
         {% endif %}</p>

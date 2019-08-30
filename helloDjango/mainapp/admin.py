@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from mainapp.models import UserEntity, CateTypeEntity, FruitEntity, StoreEntity, FruitImage, RealProfile, CartEntity, \
-    FruitCartEntity, TagEntity, UserPasswordEntity
+    FruitCartEntity, TagEntity
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -76,4 +76,3 @@ admin.site.register(RealProfile, RealProfileAdmin)
 admin.site.register(CartEntity, CartEntityAdmin)
 admin.site.register(FruitCartEntity, FruitCartEntityAdmin)
 admin.site.register(TagEntity, TagEntityAdmin)
-admin.site.register(UserPasswordEntity, UserPasswordEntityAdmin)

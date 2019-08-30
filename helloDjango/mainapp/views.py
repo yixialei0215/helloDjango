@@ -9,7 +9,7 @@ from django.template import loader
 from django.views.decorators.csrf import csrf_protect
 
 from helloDjango import settings
-from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage, UserPasswordEntity
+from mainapp.models import UserEntity, FruitEntity, StoreEntity, FruitImage
 from django.db.models import Count, Sum, Min, Max, Avg, F, Q
 
 
@@ -131,7 +131,7 @@ def user_list3(request):
     # file_path = os.path.join(settings.BASE_DIR, 'mainapp/models.py')
     # file_stat = os.stat(file_path)
 
-    html = loader.render_to_string('user/list.html', locals(), request)
+    html = loader.render_to_string('list.html', locals(), request)
 
     return HttpResponse(html, status=200)  # 增加响应头??
 
@@ -157,9 +157,7 @@ def find_fruit(request):
         ret = ''
         name = request.POST.get('name')
         pwd = request.POST.get('pwd')
-        user_ = UserPasswordEntity.objects.filter(users__name=name).first()
-        time1 = time.time() + 180
-        response = ''
+        user_ = UserEntity.objects.filter(name=name).first()
         if user_:
             if user_.password == pwd:
                 obj = redirect('/user/find')
@@ -233,8 +231,3 @@ def delete_fruit(request):
     print(result)
 
     return render(request, 'fruit/delete.html', locals())
-
-
-# 用户登录
-def user_login(request):
-    pass
